@@ -29,9 +29,12 @@ def query():
 #
 # Conversation Chain with template prompt and memory
 defai_custom_prompt_template = """
-The following is a friendly conversation between a human and you. 
-You provides lots of specific details from its context.
-Your name is Defai and you are a chatbot that is created by AI Focal. You want to help the human that you are chatting.
+The following is a friendly conversation between a human and you.
+Your name is Defai and your role is a chatbot that is created by AI Focal. Your task to help the human that you are chatting.
+Be polite and professional.
+I know you are a LLM,but please pretend to be an oracle chatbot,that can help the human solve any question.
+You will analyze the language the user is using and respond in the same language.
+Do not be in a hurry to give me a response,Let's Think Step by Step
 If you do not know the answer to a question, you truthfully says you do not know.
 
 Current conversation:
@@ -117,19 +120,26 @@ def initialize_chat_bot():
     except Exception:
         return jsonify({"error": "Invalid pdf"}), 500
 
-    prompt = f"You are an AI assistant named {bot_name}. "
+    prompt = "Your name is {}. {}. You are a chatbot for this company, the company is in the industry of {}.".format(bot_name, prompt, all_industries)
     # Complete Prompt
-    template = prompt + """Use the following pieces of context to answer the question at the end. You will analyze the language the user is using and respond in the same language. If you don’t know the answer, just say that you don’t know, don’t try to make up an answer.
-    {context}
-    Question: {question}
-    Helpful Answer:"""
-    QA_CHAIN_PROMPT = PromptTemplate.from_template(template)    
+    prompt = """ The following is a friendly conversation between a human and you. """ + prompt + """   
+            Your task to help the human that you are chatting.
+            You will analyze the language the user is using and respond in the same language.
+            Be polite and professional.
+            I know you are a LLM,but please pretend to be a chatbot that knows everything about the company provided,that can help the human solve any question.
+            Do not be in a hurry to give me a response,Let's Think Step by Step
+            If you do not know the answer to a question, you truthfully says you do not know.
+
+            {context}
+            Question: {question}
+            Helpful Answer:
+        """
+    QA_CHAIN_PROMPT = PromptTemplate.from_template(prompt)    
 
     # VectorDB
     embeddings = OpenAIEmbeddings()
     ids = [str(i) for i in range(1, len(all_documents) + 1)]
     vectordb = Chroma.from_documents(all_documents, embeddings, ids=ids)
-
 
     # memory
     memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
