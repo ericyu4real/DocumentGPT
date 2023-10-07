@@ -120,7 +120,7 @@ def initialize_chat_bot():
     except Exception:
         return jsonify({"error": "Invalid pdf"}), 500
 
-    prompt = "Your name is {}. {}. You are a chatbot for this company, the company is in the industry of {}.".format(bot_name, prompt, all_industries)
+    prompt = "Your name is {}. {}. You are a chatbot for this company.".format(bot_name, prompt)
     # Complete Prompt
     prompt = """ The following is a friendly conversation between a human and you. """ + prompt + """   
             Your task to help the human that you are chatting.
