@@ -77,18 +77,11 @@ def initialize_chat_bot():
     global prompt
     global memory
 
-    #Message Log
-    message_parts = []
-
     #Bot Name
     bot_name = request.form.get("bot_name", "")
 
     #User Prompt
     prompt = request.form.get("prompt", "")
-
-    #Industry
-    selected_industries = request.form.getlist("selectedIndustry")
-    all_industries = ",".join(selected_industries)
 
     #URL
     url = request.form.get("website_url", "")
@@ -99,7 +92,6 @@ def initialize_chat_bot():
             text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
             documents = text_splitter.split_documents(documents)
             all_documents.extend(documents)
-            message_parts.append("url")
     
     except Exception:
         return jsonify({"error": "Invalid URL"}), 500
@@ -115,25 +107,21 @@ def initialize_chat_bot():
             text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
             documents = text_splitter.split_documents(documents)
             all_documents.extend(documents)
-            message_parts.append("pdf")
 
     except Exception:
         return jsonify({"error": "Invalid pdf"}), 500
 
-    prompt = "Your name is {}. {}. You are a chatbot for this company.".format(bot_name, prompt)
+    prompt = "You are an AI assistant named {}".format(bot_name)
     # Complete Prompt
-    prompt = """ The following is a friendly conversation between a human and you. """ + prompt + """   
-            Your task to help the human that you are chatting.
+    prompt = """ The following is a friendly conversation between a human and you. """ + prompt + """
             You will analyze the language the user is using and respond in the same language.
             Be polite and professional.
-            I know you are a LLM,but please pretend to be a chatbot that knows everything about the company provided,that can help the human solve any question.
-            Do not be in a hurry to give me a response,Let's Think Step by Step
-            If you do not know the answer to a question, you truthfully says you do not know.
+            Do not be in a hurry to give me a response, Let's Think Step by Step.
 
+            Use the following pieces of context to answer the question at the end. If you don't know the answer, just say that you don't know, don't try to make up an answer.
             {context}
             Question: {question}
-            Helpful Answer:
-        """
+            Helpful Answer:"""
     QA_CHAIN_PROMPT = PromptTemplate.from_template(prompt)    
 
     # VectorDB
@@ -153,10 +141,7 @@ def initialize_chat_bot():
         memory = memory
     )
 
-    if message_parts:
-        message = f"Added {' and '.join(message_parts)} for chatbot called {bot_name} with prompt {prompt}"
-    else:
-        message = f"Added chatbot called {bot_name} with prompt {prompt}"
+    message = f"Chatbot called {bot_name} is created successfully"
 
     response = jsonify({"data": message}), 200
     return response
