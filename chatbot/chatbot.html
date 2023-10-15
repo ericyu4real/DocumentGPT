@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Talk with your documents</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <section id="initialize-chatbot">
+      <h2>Initialize Chatbot</h2>
+      <form id="initialize-form" action="http://127.0.0.1:5002/api/bot_initialize" method="POST" enctype="multipart/form-data">
+        <label for="bot_name">Bot Name:</label>
+        <input type="text" id="bot_name" name="bot_name" required><br><br>
+
+        <label for="website_url">Website URL:</label>
+        <input type="url" id="website_url" name="website_url" placeholder="https://example.com"><br><br>
+
+        <label for="pdf">Upload PDF:</label>
+        <input type="file" id="pdf" name="pdf"><br><br>
+
+        <input type="submit" value="Initialize Chatbot">
+      </form>
+    </section>
+
+    <section id="chatbox">
+      <h2>Chatbox</h2>
+      <div id="chat-history"></div>
+      <form id="question-form" action="http://127.0.0.1:5002/api/query_bot" method="POST">
+        <input type="text" id="question" name="question" required>
+        <button type="submit">Send</button>
+      </form>
+    </section>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

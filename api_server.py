@@ -115,13 +115,18 @@ def initialize_chat_bot():
     # Complete Prompt
     prompt = """ The following is a friendly conversation between a human and you. """ + prompt + """
             You will analyze the language the user is using and respond in the same language.
-            Be polite and professional.
+            Be polite and helpful.
             Do not be in a hurry to give me a response, Let's Think Step by Step.
 
             Use the following pieces of context to answer the question at the end. If you don't know the answer, just say that you don't know, don't try to make up an answer.
             {context}
             Question: {question}
             Helpful Answer:"""
+#     prompt = """
+# Complete a full---critical but not necessarily negative---review of the paper.
+# The review should include a clear articulation of the key contributions of the work, its strengths and utility, and the limitations and weaknesses. A fundamental criterion for the evaluation of all papers is the submission’s contribution to visualization research. 
+# In all cases, a paper must break new ground and make an original research contribution. However, it is important to recognize that there are many ways for which a paper can make a contribution to visualization, and you should review the paper appropriately. Make sure to unclude suggestions on how to improve the work.
+# """
     QA_CHAIN_PROMPT = PromptTemplate.from_template(prompt)    
 
     # VectorDB
@@ -132,11 +137,11 @@ def initialize_chat_bot():
     # memory
     memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
     # load model
-    model = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
+    model = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0.3)
     qa = ConversationalRetrievalChain.from_llm(
         llm = model,
         chain_type = 'stuff',
-        retriever=vectordb.as_retriever(search_type="mmr", search_kwargs={"k": 3}),
+        retriever=vectordb.as_retriever(search_kwargs={"k": 8}),
         combine_docs_chain_kwargs={"prompt": QA_CHAIN_PROMPT},
         memory = memory
     )
