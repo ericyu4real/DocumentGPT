@@ -220,4 +220,5 @@ def reset():
         return jsonify({"error": str(error)}), 500
 
 if __name__ == '__main__': 
-   app.run(host="0.0.0.0", port=5002, debug=False)
+    app.run()
+#    app.run(host="0.0.0.0", port=5002, debug=False)
