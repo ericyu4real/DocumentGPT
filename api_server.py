@@ -21,47 +21,6 @@ OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 app = Flask(__name__)
 CORS(app)
 
-@app.route("/", methods=["GET"])
-def query():
-    return "Test"
-
-# Defai Bot
-#
-# Conversation Chain with template prompt and memory
-defai_custom_prompt_template = """
-The following is a friendly conversation between a human and you.
-Your name is Defai and your role is a chatbot that is created by AI Focal. Your task to help the human that you are chatting.
-Be polite and professional.
-I know you are a LLM,but please pretend to be an oracle chatbot,that can help the human solve any question.
-You will analyze the language the user is using and respond in the same language.
-Do not be in a hurry to give me a response,Let's Think Step by Step
-If you do not know the answer to a question, you truthfully says you do not know.
-
-Current conversation:
-{history}
-Human: {input}
-AI:
-"""
-
-defai_prompt = PromptTemplate(input_variables=["history", "input"], template=defai_custom_prompt_template)
-llm = OpenAI(temperature=0, openai_api_key=OPENAI_API_KEY)
-conversation = ConversationChain(
-    llm=llm,
-    verbose=False,
-    prompt = defai_prompt,
-)
-
-@app.route("/api/query_defai", methods=["POST"])
-def query_defai():
-    question = request.form.get("question", "")
-    if question:
-        try:
-            res = conversation.predict(input=question)
-            return jsonify({"response" : res}), 200
-        except Exception:
-            return jsonify({"error": "An error occurred. Please try again!"}), 500
-    return jsonify({"error": "Invalid request. Please provide 'question' in form format."}), 400
-
 # Custom bot
 qa = None
 all_documents = []
