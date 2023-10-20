@@ -55,20 +55,20 @@ def initialize_chat_bot():
     except Exception:
         return jsonify({"error": "Invalid URL"}), 500
 
-    # #PDF
-    # pdf_file = request.files.get('pdf')
-    # try:
-    #     if pdf_file:
-    #         pdf_buffer = pdf_file.read()
-    #         destination_path = store_pdf_buffer(pdf_buffer)
-    #         loader = PyPDFLoader(destination_path)
-    #         documents = loader.load()
-    #         text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
-    #         documents = text_splitter.split_documents(documents)
-    #         all_documents.extend(documents)
+    #PDF
+    pdf_file = request.files.get('pdf')
+    try:
+        if pdf_file:
+            pdf_buffer = pdf_file.read()
+            destination_path = store_pdf_buffer(pdf_buffer)
+            loader = PyPDFLoader(destination_path)
+            documents = loader.load()
+            text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
+            documents = text_splitter.split_documents(documents)
+            all_documents.extend(documents)
 
-    # except Exception:
-    #     return jsonify({"error": "Invalid pdf"}), 500
+    except Exception:
+        return jsonify({"error": "Invalid pdf"}), 500
 
     prompt = "You are an AI assistant named {}".format(bot_name)
     # Complete Prompt
@@ -106,31 +106,31 @@ def initialize_chat_bot():
     response = jsonify({"data": message}), 200
     return response
 
-# # store pdf
-# def store_pdf_buffer(pdf_buffer):
-#     try:
-#         # Create the destination folder path
-#         destination_folder_path = os.path.join(os.getcwd(), 'pdf_file')
+# store pdf
+def store_pdf_buffer(pdf_buffer):
+    try:
+        # Create the destination folder path
+        destination_folder_path = os.path.join(os.getcwd(), 'pdf_file')
 
-#         # Create the destination folder if it doesn't exist
-#         if not os.path.exists(destination_folder_path):
-#             os.makedirs(destination_folder_path)
+        # Create the destination folder if it doesn't exist
+        if not os.path.exists(destination_folder_path):
+            os.makedirs(destination_folder_path)
 
-#         # Generate a unique file name (you can customize this as needed)
-#         pdf_file_name = f'pdf_{int(time.time())}.pdf'
+        # Generate a unique file name (you can customize this as needed)
+        pdf_file_name = f'pdf_{int(time.time())}.pdf'
 
-#         # Create the full path for the PDF file
-#         destination_path = os.path.join(destination_folder_path, pdf_file_name)
+        # Create the full path for the PDF file
+        destination_path = os.path.join(destination_folder_path, pdf_file_name)
 
-#         print(destination_path)
-#         # Write the PDF buffer to the file
-#         with open(destination_path, 'wb') as pdf_file:
-#             pdf_file.write(pdf_buffer)
+        print(destination_path)
+        # Write the PDF buffer to the file
+        with open(destination_path, 'wb') as pdf_file:
+            pdf_file.write(pdf_buffer)
 
-#         return destination_path
-#     except Exception as e:
-#         print(f'An error occurred: {str(e)}')
-#         return None
+        return destination_path
+    except Exception as e:
+        print(f'An error occurred: {str(e)}')
+        return None
 
 #query custom bot
 @app.route("/api/query_bot", methods=["POST"])
