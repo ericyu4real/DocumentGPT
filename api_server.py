@@ -21,13 +21,6 @@ OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 app = Flask(__name__)
 CORS(app)
 
-# Custom bot
-qa = None
-all_documents = []
-vectordb = None
-prompt = ""
-memory = None
-
 @app.route("/api/bot_initialize", methods=["POST"])
 def initialize_chat_bot():
     global all_documents
@@ -38,9 +31,6 @@ def initialize_chat_bot():
 
     #Bot Name
     bot_name = request.form.get("bot_name", "")
-
-    #User Prompt
-    prompt = request.form.get("prompt", "")
 
     #URL
     url = request.form.get("website_url", "")
