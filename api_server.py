@@ -122,14 +122,14 @@ def initialize_chat_bot():
     QA_CHAIN_PROMPT = PromptTemplate.from_template(prompt)    
 
     # VectorDB
-    embeddings = OpenAIEmbeddings(openai_api_key="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")
+    embeddings = OpenAIEmbeddings()
     ids = [str(i) for i in range(1, len(all_documents) + 1)]
     vectordb = Chroma.from_documents(all_documents, embeddings, ids=ids)
 
     # memory
     memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
     # load model
-    model = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0, openai_api_key="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")
+    model = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
     qa = ConversationalRetrievalChain.from_llm(
         llm = model,
         chain_type = 'stuff',
