@@ -111,14 +111,10 @@ def initialize_chat_bot():
     except Exception:
         return jsonify({"error": "Invalid pdf"}), 500
 
-    prompt = "You are an AI assistant named {}".format(bot_name)
+    namePrompt = "You are an AI assistant named {}".format(bot_name)
     # Complete Prompt
-    prompt = """ The following is a friendly conversation between a human and you. """ + prompt + """
-            You will analyze the language the user is using and respond in the same language.
-            Be polite and helpful.
-            Do not be in a hurry to give me a response, Let's Think Step by Step.
-
-            Use the following pieces of context to answer the question at the end. If you don't know the answer, just say that you don't know, don't try to make up an answer.
+    prompt = namePrompt + """
+            Use the following pieces of context to answer the question at the end. If you can't find the answer in the given context, just say that you don't know, don't try to make up an answer.
             {context}
             Question: {question}
             Helpful Answer:"""
@@ -220,5 +216,5 @@ def reset():
         return jsonify({"error": str(error)}), 500
 
 if __name__ == '__main__': 
-    app.run()
-#    app.run(host="0.0.0.0", port=5002, debug=False)
+    # app.run()
+   app.run(host="0.0.0.0", port=5002, debug=False)
