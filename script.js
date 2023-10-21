@@ -9,7 +9,7 @@ initializeForm.addEventListener('submit', async (event) => {
     event.preventDefault();
     const formData = new FormData(initializeForm);
     try {
-        const response = await fetch('http://127.0.0.1:5002/api/bot_initialize', {
+        const response = await fetch('https://documentgpt-570160c44d42.herokuapp.com/api/bot_initialize', {
             method: 'POST',
             body: formData,
         });
@@ -25,7 +25,7 @@ questionForm.addEventListener('submit', async (event) => {
     event.preventDefault();
     const formData = new FormData(questionForm);
     try {
-        const response = await fetch('http://127.0.0.1:5002/api/query_bot', {
+        const response = await fetch('https://documentgpt-570160c44d42.herokuapp.com/api/query_bot', {
             method: 'POST',
             body: formData,
         });
